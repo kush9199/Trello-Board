@@ -1,7 +1,11 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("./middleware")
-const {userModel, organizationModel} =require("./models");
+//const {userModel, organizationModel} =require("./models");
+const { userModel, organizationModel } = require("./models");
+
+console.log("userModel =", userModel);
+console.log("organizationModel =", organizationModel);
 
 
 let BOARD_ID = 1;
@@ -58,7 +62,7 @@ app.post("/signin",async (req, res) => {
     }
 
     const token = jwt.sign({
-        userId: userExists.id
+        userId: userExists._id
     }, "attlasiationsupersecret123123password");
     // create a jwt for the user
 
