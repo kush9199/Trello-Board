@@ -184,43 +184,43 @@ app.delete("/members", authMiddleware, async (req, res) => {
     const organizationId = req.body.organizationId;
     const memberUserUsername = req.body.memberUserUsername;
 
-    //const organization = ORGANIZATIONS.find(org => org.id === organizationId);
-    const organization =await organizationModel.findOne({
-          _id:organizationId 
-     })
+    const organization = await organizationModel.findOne({
+        _id: organizationId
+    });
 
     if (!organization || organization.admin.toString() !== userId) {
-        res.status(411).json({
-            message: "Either this org doesnt exist or you are not an admin of this org"
-        })
-        return
+        return res.status(411).json({
+            message: "Either this org doesn't exist or you are not an admin of this org"
+        });
     }
 
     const memberUser = await userModel.findOne({
-    username: memberUserUsername
-   })
+        username: memberUserUsername
+    });
 
     if (!memberUser) {
-        res.status(411).json({
+        return res.status(411).json({
             message: "No user with this username exists in our db"
-        })
-        return
+        });
     }
-//
-  await organizationModel.updateOne({
-    _id: organizationId
-  },{
-    "$pull":{
-        members : memberUser._id
-    }
-  })
+
+    const result = await organizationModel.updateOne(
+        {
+            _id: organizationId
+        },
+        {
+            $pull: {
+                members: memberUser._id
+            }
+        }
+    );
+
+    console.log("Delete Result:", result);
+
     res.json({
         message: "member deleted!"
-    })
-})
-app.get("/", (req, res) => {
-    console.log("Root route hit");
-    res.send("Server is working");
+    });
 });
-
-app.listen(3000);
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
+});
