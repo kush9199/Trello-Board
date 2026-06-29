@@ -222,14 +222,53 @@ app.get("/issues", async (req, res) => {
     });
 });
 
-app.get("/members", (req, res) => {
-
+app.get("/members", async (req, res) => {
+   const organizationId = req.query.organizationId;
+   const organization = await organization.findOne({
+    _id: organizationId
+   })
+   if(!organization){
+    res.status(404).json({
+        message: "Organization Not Found"
+    })
+   }
+   const members = await userModel.findOne({
+    _id: {
+        $in: organization.members
+    }
+   });
+   res.json({
+    members
+   })
 })
 
 
 // UPDATE
-app.put("/issues", (req, res) => {
-
+app.put("/issues", async (req, res) => {
+   const issueId = req.body.issueId;
+   const title = req.body.title;
+   const description = req.body.description;
+   const status = req.body.status;
+   const issue= await issueModel.findOne({
+    _id: issueId
+   })
+   if(!issue){
+    return res.status(404).json({
+        messgae: "Issue Not Found"
+    })
+   }
+   await issueModel.updateOne(
+    {
+        _id: issueId
+    },{
+        title,
+        description, 
+        status
+    }
+   )
+   res.json({
+    messgae: "Issues Updates"
+   })
 })
 
 //DELETE -- FIND THE GBUG and fix it
