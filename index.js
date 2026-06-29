@@ -2,7 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("./middleware")
 //const {userModel, organizationModel} =require("./models");
-const { userModel, organizationModel } = require("./models");
+const { userModel, organizationModel, boardModel,issueModel } = require("./models");
 
 console.log("userModel =", userModel);
 console.log("organizationModel =", organizationModel);
@@ -128,12 +128,52 @@ app.post("/add-member-to-organization", authMiddleware, async (req, res) => {
     })
 })
 
-app.post("/board", (req, res) => {
-    
+app.post("/board",authMiddleware, async (req, res) => {
+    const userId= req.userId;
+    const organizationId = req.body.organizationId;
+    const title = req.body.title;
+
+    const organization = await organizationModel.findOne({
+        _id: organizationId
+    })
+    if(!organization || organization.admin.toString() !== userId){
+        return res.status(411).json({
+            message: "You are not allowed to create Boadrd"
+        })
+    }
+    const board = await boardModel.create({
+        title,
+        organizationId
+    })
+    res.json({
+        message: "Board Created",
+        boardId: board._id
+    })
 })
 
-app.post("/issue", (req, res) => {
-    
+app.post("/issue", async (req, res) => {
+    const boardId = req.body.boardId;
+    const title= req.body.title;
+    const description = req.body.description;
+    const status = req.body.status;
+    const board= await boardModel.findOne({
+        _id: boardId
+    })
+   if(! board){
+    return res.status(404).json({
+        message: "Board Not Found"
+    })
+   }
+   const issue = await issueModel.create({
+        title,
+        description,
+        boardId,
+        status
+    });
+    res.json({
+        message: "Issue created",
+        issueId: issue._id
+    });
 })
 
 //GET endpoints
@@ -159,14 +199,28 @@ app.get("/organization", authMiddleware, async (req, res) => {
     })
 })
 
-app.get("/boards", (req, res) => {
-
-    
+app.get("/boards", async (req, res) => {
+    console.log("Board endPoint hit")
+    const organizationId = req.query.organizationId;
+    const boards = await boardModel.find({
+        organizationId: organizationId
+    })
+    res.json({
+        boards
+    })
 })
 
-app.get("/issues", (req, res) => {
-    
-})
+app.get("/issues", async (req, res) => {
+    const boardId = req.query.boardId;
+
+    const issues = await issueModel.find({
+        boardId: boardId
+    });
+
+    res.json({
+        issues
+    });
+});
 
 app.get("/members", (req, res) => {
 
