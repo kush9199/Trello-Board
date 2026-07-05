@@ -25,7 +25,7 @@ function Signup() {
             );
 
             const data = await response.json();
-
+            console.log(data);
             alert(data.message);
         } catch (err) {
             console.log(err);

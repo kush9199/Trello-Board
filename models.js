@@ -9,7 +9,8 @@ mongoose.connect("mongodb+srv://anushkachauhanannu_db_user:Anushka7182@practicec
 //schema and models 
 const userSchema = new mongoose.Schema({
     username: String,
-    password: String
+    password: String,
+    role: String
 });
 
 const organizationSchema = new mongoose.Schema({

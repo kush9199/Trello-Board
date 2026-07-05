@@ -1,16 +1,23 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 const { authMiddleware } = require("./middleware")
 //const {userModel, organizationModel} =require("./models");
 const { userModel, organizationModel, boardModel,issueModel } = require("./models");
+
+const ROLE = {
+    USER: "USER",
+    ADMIN: "ADMIN"
+}
 
 console.log("userModel =", userModel);
 console.log("organizationModel =", organizationModel);
 const app = express();
 app.use(express.json());
-
+app.use(cors());
 // CREATE
 app.post("/signup", async (req, res) => {
+    console.log(req);
     const username = req.body.username;
     const password = req.body.password;
 
@@ -27,7 +34,36 @@ app.post("/signup", async (req, res) => {
 
     const newUser = await userModel.create({
         username: username,
-        password: password
+        password: password,
+        role: ROLE.USER
+    })
+    res.json({
+        id: newUser._id,
+        message: "You have signed up successfully"
+    })
+
+})
+
+app.post("/signup/admin", async (req, res) => {
+    console.log(req);
+    const username = req.body.username;
+    const password = req.body.password;
+
+   // const userExists = USERS.find(u => u.username === username);
+   const userExists = await userModel.findOne({
+    username: username,
+   })
+    if (userExists) {
+        res.status(411).json({
+            message: "User with this username already exists"
+        })
+        return;
+    }
+
+    const newUser = await userModel.create({
+        username: username,
+        password: password,
+        role: ROLE.ADMIN
     })
     res.json({
         id: newUser._id,
@@ -51,7 +87,8 @@ app.post("/signin",async (req, res) => {
     }
 
     const token = jwt.sign({
-        userId: userExists._id
+        userId: userExists._id,
+        role: userExists.role
     }, "attlasiationsupersecret123123password");
     // create a jwt for the user
 
@@ -119,13 +156,15 @@ app.post("/add-member-to-organization", authMiddleware, async (req, res) => {
 
 app.post("/board",authMiddleware, async (req, res) => {
     const userId= req.userId;
+    const role = req.role;
     const organizationId = req.body.organizationId;
     const title = req.body.title;
 
     const organization = await organizationModel.findOne({
         _id: organizationId
     })
-    if(!organization || organization.admin.toString() !== userId){
+    // role check for admin access
+    if( role !== ROLE.ADMIN && !organization || organization.admin.toString() !== userId){
         return res.status(411).json({
             message: "You are not allowed to create Boadrd"
         })
