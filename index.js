@@ -6,17 +6,6 @@ const { userModel, organizationModel, boardModel,issueModel } = require("./model
 
 console.log("userModel =", userModel);
 console.log("organizationModel =", organizationModel);
-
-
-let BOARD_ID = 1;
-let ISSUES_ID = 1;
-
-
-
-const BOARDS = [];
-
-const ISSUES = [];
-
 const app = express();
 app.use(express.json());
 
