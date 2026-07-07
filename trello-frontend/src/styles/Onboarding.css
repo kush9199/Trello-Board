@@ -1,0 +1,39 @@
+.onboarding-container {
+    min-height: 100vh;
+    background: #14222a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.onboarding-card {
+    width: 450px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 25px rgba(0,0,0,0.2);
+}
+
+.onboarding-card h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.onboarding-card input,
+.onboarding-card textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.onboarding-card button {
+    width: 100%;
+    padding: 12px;
+    background: #0055cc;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}

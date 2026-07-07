@@ -8,10 +8,24 @@ mongoose.connect("mongodb+srv://anushkachauhanannu_db_user:Anushka7182@practicec
 });
 //schema and models 
 const userSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    role: String
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
+
+    password: {
+        type: String,
+        required: true
+    },
+
+    role: {
+        type: String,
+        enum: ["USER", "ADMIN"],
+        default: "USER"
+    }
 });
+
 
 const organizationSchema = new mongoose.Schema({
     title: String,
