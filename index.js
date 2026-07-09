@@ -17,101 +17,101 @@ app.use(express.json());
 app.use(cors());
 const bcrypt = require("bcrypt");
 // CREATE
-app.post("/signup", async (req, res) => {
-    console.log(req);
-    const username = req.body.username;
-    const password = req.body.password;
+// app.post("/signup", async (req, res) => {
+//     console.log(req);
+//     const username = req.body.username;
+//     const password = req.body.password;
 
-   // const userExists = USERS.find(u => u.username === username);
-   const userExists = await userModel.findOne({
-    username: username,
-   })
-    if (userExists) {
-        res.status(411).json({
-            message: "User with this username already exists"
-        })
-        return;
-    }
+//    // const userExists = USERS.find(u => u.username === username);
+//    const userExists = await userModel.findOne({
+//     username: username,
+//    })
+//     if (userExists) {
+//         res.status(411).json({
+//             message: "User with this username already exists"
+//         })
+//         return;
+//     }
 
-    const hashedPassword = await bcrypt.hash(password, 5);
+//     const hashedPassword = await bcrypt.hash(password, 5);
 
-     const newUser = await userModel.create({
-    username,
-    password: hashedPassword,
-    role: ROLE.USER
-    });
-    res.json({
-        id: newUser._id,
-        message: "You have signed up successfully"
-    })
+//      const newUser = await userModel.create({
+//     username,
+//     password: hashedPassword,
+//     role: ROLE.USER
+//     });
+//     res.json({
+//         id: newUser._id,
+//         message: "You have signed up successfully"
+//     })
 
-})
+// })
 
-app.post("/signup/admin", async (req, res) => {
-    console.log(req);
-    const username = req.body.username;
-    const password = req.body.password;
+// app.post("/signup/admin", async (req, res) => {
+//     console.log(req);
+//     const username = req.body.username;
+//     const password = req.body.password;
 
-   // const userExists = USERS.find(u => u.username === username);
-   const userExists = await userModel.findOne({
-    username: username,
-   })
-    if (userExists) {
-        res.status(411).json({
-            message: "User with this username already exists"
-        })
-        return;
-    }
+//    // const userExists = USERS.find(u => u.username === username);
+//    const userExists = await userModel.findOne({
+//     username: username,
+//    })
+//     if (userExists) {
+//         res.status(411).json({
+//             message: "User with this username already exists"
+//         })
+//         return;
+//     }
 
-    const hashedPassword = await bcrypt.hash(password, 5);
+//     const hashedPassword = await bcrypt.hash(password, 5);
 
-   const newUser = await userModel.create({
-    username,
-    password: hashedPassword,
-    role: ROLE.ADMIN
-});
-    res.json({
-        id: newUser._id,
-        message: "You have signed up successfully"
-    })
+//    const newUser = await userModel.create({
+//     username,
+//     password: hashedPassword,
+//     role: ROLE.ADMIN
+// });
+//     res.json({
+//         id: newUser._id,
+//         message: "You have signed up successfully"
+//     })
 
-})
+// })
 
-app.post("/signin",async (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-const userExists = await userModel.findOne({
-    username
-});
+// app.post("/signin",async (req, res) => {
+//     const username = req.body.username;
+//     const password = req.body.password;
+// const userExists = await userModel.findOne({
+//     username
+// });
 
-if (!userExists) {
-    return res.status(403).json({
-        message: "Incorrect credentials"
-    });
-}
+// if (!userExists) {
+//     return res.status(403).json({
+//         message: "Incorrect credentials"
+//     });
+// }
 
-const passwordMatch = await bcrypt.compare(
-    password,
-    userExists.password
-);
+// const passwordMatch = await bcrypt.compare(
+//     password,
+//     userExists.password
+// );
 
-if (!passwordMatch) {
-    return res.status(403).json({
-        message: "Incorrect credentials"
-    });
-}
+// if (!passwordMatch) {
+//     return res.status(403).json({
+//         message: "Incorrect credentials"
+//     });
+// }
 
-    const token = jwt.sign({
-        userId: userExists._id,
-        role: userExists.role
-    }, "attlasiationsupersecret123123password");
-    // create a jwt for the user
+//     const token = jwt.sign({
+//         userId: userExists._id,
+//         role: userExists.role
+//     }, "attlasiationsupersecret123123password");
+//     // create a jwt for the user
 
-    res.json({
-        token,
-        role: userExists.role
-    })
-})
+//     res.json({
+//         token,
+//         role: userExists.role
+//     })
+// })
 
 // AUTHENTICATED ROUTE - MIDDLEWARE
 app.post("/organization", authMiddleware, async (req, res) => {
