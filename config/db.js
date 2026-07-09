@@ -1,8 +1,14 @@
 const mongoose = require("mongoose");
 
-async function connectDB() {
-    await mongoose.connect(process.env.MONGO_URL);
-    console.log("Mongo Connected");
-}
+mongoose
+    .connect(
+        "mongodb+srv://anushkachauhanannu_db_user:Anushka7182@practicecluster.pshvkwj.mongodb.net/Trello"
+    )
+    .then(() => {
+        console.log("MongoDB Connected Successfully");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
-module.exports = connectDB;
+module.exports = mongoose;
