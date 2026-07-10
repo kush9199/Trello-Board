@@ -1,36 +1,63 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../services/api";
+import "../styles/Auth.css";
 
-const Signin = () => {
+function Signin() {
+
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSignup = async (e) => {
+    const handleSignin = async (e) => {
+
         e.preventDefault();
 
+        if (!username || !password) {
+            alert("Please fill all fields");
+            return;
+        }
+
         try {
-            const response = await fetch(
-                "http://localhost:3000/signin",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        username,
-                        password
-                    })
-                }
+
+            const response = await api.post("/signin", {
+                username,
+                password
+            });
+
+            const data = response.data;
+
+            // Store token and role
+            localStorage.setItem(
+                "authData",
+                JSON.stringify(data)
             );
 
-            const data = await response.json();
-            localStorage.setItem("authData", JSON.stringify(data));
-            alert(data.message);
+            alert("Login Successful");
+
+            if (data.role === "ADMIN") {
+                navigate("/onboarding");
+            } else {
+                navigate("/organization");
+            }
+
         } catch (err) {
+
             console.log(err);
+
+            alert(
+                err.response?.data?.message ||
+                "Something went wrong"
+            );
+
         }
+
     };
-    return(
+
+    return (
         <div className="auth-container">
+
             <div className="auth-card">
 
                 <div className="auth-logo">
@@ -38,10 +65,10 @@ const Signin = () => {
                 </div>
 
                 <h2 className="auth-title">
-                    Sign up for your account
+                    Sign in to your account
                 </h2>
 
-                <form onSubmit={handleSignup}>
+                <form onSubmit={handleSignin}>
 
                     <input
                         type="text"
@@ -71,7 +98,19 @@ const Signin = () => {
                     </button>
 
                 </form>
+
+                <p className="auth-footer">
+                    Don't have an account?{" "}
+                    <Link
+                        to="/signup"
+                        className="auth-link"
+                    >
+                        Sign Up
+                    </Link>
+                </p>
+
             </div>
+
         </div>
     );
 }

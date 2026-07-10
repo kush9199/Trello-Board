@@ -1,39 +1,55 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import "./../styles/Auth.css";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../services/api";
+import "../styles/Auth.css";
 
 function Signup() {
+
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [role, setRole] = useState("USER");
 
     const handleSignup = async (e) => {
         e.preventDefault();
 
+        if (!username || !password) {
+            alert("Please fill all fields");
+            return;
+        }
+
         try {
-            const response = await fetch(
-                "http://localhost:3000/signup",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        username,
-                        password
-                    })
-                }
+
+            const endpoint =
+                role === "ADMIN"
+                    ? "/signup/admin"
+                    : "/signup";
+
+            const response = await api.post(endpoint, {
+                username,
+                password
+            });
+
+            alert(response.data.message);
+
+            navigate("/signin");
+
+        } catch (err) {
+
+            console.log(err);
+
+            alert(
+                err.response?.data?.message ||
+                "Something went wrong"
             );
 
-            const data = await response.json();
-            console.log(data);
-            alert(data.message);
-        } catch (err) {
-            console.log(err);
         }
     };
 
     return (
         <div className="auth-container">
+
             <div className="auth-card">
 
                 <div className="auth-logo">
@@ -41,7 +57,7 @@ function Signup() {
                 </div>
 
                 <h2 className="auth-title">
-                    Sign up for your account
+                    Create your Trello Account
                 </h2>
 
                 <form onSubmit={handleSignup}>
@@ -66,6 +82,34 @@ function Signup() {
                         }
                     />
 
+                    <div className="role-selection">
+
+                        <label>
+                            <input
+                                type="radio"
+                                value="USER"
+                                checked={role === "USER"}
+                                onChange={(e) =>
+                                    setRole(e.target.value)
+                                }
+                            />
+                            User
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                value="ADMIN"
+                                checked={role === "ADMIN"}
+                                onChange={(e) =>
+                                    setRole(e.target.value)
+                                }
+                            />
+                            Admin
+                        </label>
+
+                    </div>
+
                     <button
                         type="submit"
                         className="auth-button"
@@ -86,6 +130,7 @@ function Signup() {
                 </p>
 
             </div>
+
         </div>
     );
 }

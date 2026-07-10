@@ -1,124 +1,108 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../services/api";
 import "../styles/Onboarding.css";
 
 function Onboarding() {
 
+    const navigate = useNavigate();
+
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    async function createOrganization() {
+    useEffect(() => {
+
+        const authData = JSON.parse(
+            localStorage.getItem("authData")
+        );
+
+        // User is not logged in
+        if (!authData) {
+            navigate("/signin");
+            return;
+        }
+
+        // Only admins are allowed
+        if (authData.role !== "ADMIN") {
+            alert("Only admins can create organizations.");
+            navigate("/organization");
+            return;
+        }
+
+    }, [navigate]);
+
+    const createOrganization = async () => {
+
+        if (!title.trim() || !description.trim()) {
+            alert("Please fill all fields.");
+            return;
+        }
+
         try {
-            const token = localStorage.getItem("token");
 
-            const response = await fetch(
-                "http://localhost:3000/organization",
+            const response = await api.post(
+                "/organization",
                 {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        token: token
-                    },
-                    body: JSON.stringify({
-                        title,
-                        description
-                    })
+                    title,
+                    description
                 }
             );
 
-            const data = await response.json();
+            alert(response.data.message);
 
-            console.log(data);
+            // Save organization id for future use
+            localStorage.setItem(
+                "organizationId",
+                response.data.id
+            );
 
-            if (response.ok) {
-                alert("Organization Created");
-            } else {
-                alert(data.message);
-            }
+            // Clear form
+            setTitle("");
+            setDescription("");
+
+            // Redirect
+            navigate("/organization");
 
         } catch (err) {
+
             console.error(err);
-            alert("Something went wrong");
+
+            alert(
+                err.response?.data?.message ||
+                "Something went wrong."
+            );
+
         }
-    }
+
+    };
 
     return (
+
         <div className="onboarding-container">
+
             <div className="onboarding-card">
 
-                <h1>Create your first organization</h1>
+                <h1>Create your first Organization</h1>
+
+                <p className="subtitle">
+                    Set up your workspace to start managing boards and issues.
+                </p>
 
                 <input
                     type="text"
                     placeholder="Organization Name"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) =>
+                        setTitle(e.target.value)
+                    }
                 />
 
                 <textarea
-                    placeholder="Description"
+                    placeholder="Organization Description"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={(e) =>
+                        setDescription(e.target.value)
+                    }
                 />
 
                 <button onClick={createOrganization}>
@@ -126,8 +110,11 @@ function Onboarding() {
                 </button>
 
             </div>
+
         </div>
+
     );
+
 }
 
 export default Onboarding;

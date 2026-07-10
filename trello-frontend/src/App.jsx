@@ -1,31 +1,43 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Signup from "./pages/Signup"
+
+import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Onboarding from "./pages/Onboarding";
+import Organization from "./pages/Organization";
+
 function App() {
-  return (
-    <BrowserRouter>
+    return (
+        <BrowserRouter>
 
-      <Routes>
+            <Routes>
 
-        <Route
-          path="signup"
-          element={<Signup />}
-        />
+                <Route
+                    path="/"
+                    element={<Signup />}
+                />
 
-        <Route
-          path="/signin"
-          element={<Signin />}
-        />
-        <Route
-    path="/onboarding"
-    element={<Onboarding />}
-/>
+                <Route
+                    path="/signup"
+                    element={<Signup />}
+                />
 
-      </Routes>
+                <Route
+                    path="/signin"
+                    element={<Signin />}
+                />
 
-    </BrowserRouter>
-  );
+                <Route
+                    path="/onboarding"
+                    element={<Onboarding />}
+                />
+               <Route
+                    path="/organization"
+                      element={<Organization />}
+                 />
+            </Routes>
+
+        </BrowserRouter>
+    );
 }
 
 export default App;
