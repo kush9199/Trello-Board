@@ -4,6 +4,7 @@ import Signup from "./pages/Signup";
 import Signin from "./pages/Signin";
 import Onboarding from "./pages/Onboarding";
 import Organization from "./pages/Organization";
+import Board from "./pages/Board";
 
 function App() {
     return (
@@ -34,6 +35,10 @@ function App() {
                     path="/organization"
                       element={<Organization />}
                  />
+                 <Route
+                     path="/board/:boardId"
+                    element={<Board />}
+                  />
             </Routes>
 
         </BrowserRouter>

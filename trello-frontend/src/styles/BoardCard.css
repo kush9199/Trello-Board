@@ -1,5 +1,5 @@
 .board-card {
-
+    cursor: pointer;
     background: white;
 
     border-radius: 18px;
@@ -14,9 +14,11 @@
 
 }
 
-.board-card:hover {
+.board-card:hover{
 
-    transform: translateY(-5px);
+    transform:translateY(-6px);
+
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
 
 }
 
