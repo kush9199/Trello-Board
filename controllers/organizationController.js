@@ -133,7 +133,50 @@ const getOrganization = async (req, res) => {
         });
     }
 };
+const getMyOrganization = async (req, res) => {
 
+    try {
+
+        const userId = req.userId;
+        const role = req.role;
+
+        let organization;
+
+        if (role === ROLE.ADMIN) {
+
+            organization = await organizationModel.findOne({
+                admin: userId
+            });
+
+        } else {
+
+            organization = await organizationModel.findOne({
+                members: userId
+            });
+
+        }
+
+        if (!organization) {
+            return res.status(404).json({
+                message: "No organization found"
+            });
+        }
+
+        res.json({
+            organization
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        res.status(500).json({
+            message: "Internal Server Error"
+        });
+
+    }
+
+};
 const getMembers = async (req, res) => {
 
     try {
@@ -258,6 +301,7 @@ module.exports = {
     createOrganization,
     addMember,
     getOrganization,
+    getMyOrganization,
     getMembers,
     removeMember
 };

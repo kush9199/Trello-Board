@@ -4,11 +4,12 @@ const {
     createOrganization,
     addMember,
     getOrganization,
+    getMyOrganization,
     getMembers,
     removeMember
 } = require("../controllers/organizationController");
 
-const { authMiddleware } = require("../middleware");
+const { authMiddleware } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -32,7 +33,12 @@ router.get(
     authMiddleware,
     getOrganization
 );
-
+//get my organization 
+router.get(
+    "/my-organization",
+    authMiddleware,
+    getMyOrganization
+);
 // Get Members
 router.get(
     "/members",

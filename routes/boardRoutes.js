@@ -5,7 +5,7 @@ const {
     getBoards
 } = require("../controllers/boardController");
 
-const { authMiddleware } = require("../middleware");
+const { authMiddleware } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
