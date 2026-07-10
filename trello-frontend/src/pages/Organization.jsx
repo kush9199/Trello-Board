@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import Hero from "../components/Hero";
+import StatsCard from "../components/StatsCard";
+import MemberCard from "../components/MemberCard";
+import BoardCard from "../components/BoardCard";
+
 import "../styles/Organization.css";
 
 function Organization() {
@@ -17,10 +25,6 @@ function Organization() {
 
     const role = authData?.role;
 
-
-    const organizationId =
-        localStorage.getItem("organizationId");
-
     useEffect(() => {
 
         if (!authData) {
@@ -36,32 +40,32 @@ function Organization() {
 
         try {
 
-            const orgResponse = await api.get(
-                `/organization?organizationId=${organizationId}`
-            );
+            const orgResponse =
+                await api.get("/my-organization");
 
-            setOrganization(orgResponse.data.organization);
+            const org =
+                orgResponse.data.organization;
 
-            const memberResponse = await api.get(
-                `/members?organizationId=${organizationId}`
-            );
+            setOrganization(org);
+
+            const memberResponse =
+                await api.get(
+                    `/members?organizationId=${org._id}`
+                );
 
             setMembers(memberResponse.data.members);
 
-            const boardResponse = await api.get(
-                `/boards?organizationId=${organizationId}`
-            );
+            const boardResponse =
+                await api.get(
+                    `/boards?organizationId=${org._id}`
+                );
 
             setBoards(boardResponse.data.boards);
 
-        } catch (err) {
+        }
+        catch (err) {
 
             console.log(err);
-
-            alert(
-                err.response?.data?.message ||
-                "Unable to load organization"
-            );
 
         }
 
@@ -69,94 +73,121 @@ function Organization() {
 
     return (
 
-        <div className="organization-container">
+        <>
 
-            <h1>Organization Dashboard</h1>
+            <Navbar />
 
-            {organization && (
+            <div className="main-layout">
 
-                <div className="organization-card">
+                <Sidebar />
 
-                    <h2>{organization.title}</h2>
+                <div className="content">
 
-                    <p>{organization.description}</p>
+                    <Hero
+                        organization={organization}
+                    />
 
-                </div>
+                    <div className="stats-grid">
 
-            )}
-           <div className ="dashboard">
-            <div className="section">
+                        <StatsCard
+                            title="Members"
+                            count={members.length}
+                            icon="👥"
+                        />
 
-                <h2>Members</h2>
+                        <StatsCard
+                            title="Boards"
+                            count={boards.length}
+                            icon="📋"
+                        />
 
-                {
-
-                    members.map(member => (
-
-                        <div
-                            className="member-card"
-                            key={member._id}
-                        >
-
-                            {member.username}
-
-                        </div>
-
-                    ))
-
-                }
-
-            </div>
-
-            <div className="section">
-
-                <h2>Boards</h2>
-
-                {
-
-                    boards.map(board => (
-
-                        <div
-                            className="board-card"
-                            key={board._id}
-                        >
-
-                            {board.title}
-
-                        </div>
-
-                    ))
-
-                }
-
-            </div>
-            </div>
-
-            {
-
-                role === "ADMIN" && (
-
-                    <div className="admin-actions">
-
-                        <button>
-
-                            Create Board
-
-                        </button>
-
-                        <button>
-
-                            Add Member
-
-                        </button>
+                        <StatsCard
+                            title="Issues"
+                            count="0"
+                            icon="📝"
+                        />
 
                     </div>
 
-                )
+                    <div className="dashboard">
 
-            }
+                        <div className="section">
 
-        </div>
+                            <h2>
+
+                                Team Members
+
+                            </h2>
+
+                            {
+
+                                members.map(member => (
+
+                                    <MemberCard
+                                        key={member._id}
+                                        member={member}
+                                    />
+
+                                ))
+
+                            }
+
+                        </div>
+
+                        <div className="section">
+
+                            <h2>
+
+                                Boards
+
+                            </h2>
+
+                            {
+
+                                boards.map(board => (
+
+                                    <BoardCard
+                                        key={board._id}
+                                        board={board}
+                                    />
+
+                                ))
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                    {
+
+                        role === "ADMIN" && (
+
+                            <div className="admin-actions">
+
+                                <button>
+
+                                    + Create Board
+
+                                </button>
+
+                                <button>
+
+                                    + Invite Member
+
+                                </button>
+
+                            </div>
+
+                        )
+
+                    }
+
+                </div>
+
+            </div>
+
+        </>
 
     );
 

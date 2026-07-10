@@ -1,0 +1,61 @@
+.member-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    background: white;
+
+    padding: 18px;
+
+    border-radius: 18px;
+
+    margin-bottom: 15px;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+
+    transition: .3s;
+
+}
+
+.member-card:hover {
+
+    transform: translateY(-5px);
+
+}
+
+.avatar {
+
+    font-size: 34px;
+
+}
+
+.ADMIN {
+
+    background: #36B37E;
+
+    color: white;
+
+    padding: 5px 12px;
+
+    border-radius: 30px;
+
+    font-size: 12px;
+
+}
+
+.MEMBER {
+
+    background: #DFE1E6;
+
+    color: #172B4D;
+
+    padding: 5px 12px;
+
+    border-radius: 30px;
+
+    font-size: 12px;
+
+}

@@ -4,23 +4,18 @@ const api = axios.create({
     baseURL: "http://localhost:3000"
 });
 
-// Runs before every request
-api.interceptors.request.use(
-    (config) => {
+// Attach JWT Token Automatically
+api.interceptors.request.use((config) => {
 
-        const authData = JSON.parse(
-            localStorage.getItem("authData")
-        );
+    const authData = JSON.parse(
+        localStorage.getItem("authData")
+    );
 
-        if (authData?.token) {
-            config.headers.token = authData.token;
-        }
-
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+    if (authData?.token) {
+        config.headers.token = authData.token;
     }
-);
+
+    return config;
+});
 
 export default api;

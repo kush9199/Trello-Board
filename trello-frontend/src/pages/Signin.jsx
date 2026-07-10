@@ -21,6 +21,7 @@ function Signin() {
 
         try {
 
+            // Login Request
             const response = await api.post("/signin", {
                 username,
                 password
@@ -28,7 +29,7 @@ function Signin() {
 
             const data = response.data;
 
-            // Store token and role
+            // Save Token + Role
             localStorage.setItem(
                 "authData",
                 JSON.stringify(data)
@@ -36,10 +37,30 @@ function Signin() {
 
             alert("Login Successful");
 
-            if (data.role === "ADMIN") {
-                navigate("/onboarding");
-            } else {
+            try {
+
+                // Check whether user/admin already belongs to an organization
+                await api.get("/my-organization");
+
+                // Organization exists
                 navigate("/organization");
+
+            } catch (err) {
+
+                if (err.response?.status === 404) {
+
+                    // Organization doesn't exist
+                    navigate("/onboarding");
+
+                } else {
+
+                    alert(
+                        err.response?.data?.message ||
+                        "Something went wrong"
+                    );
+
+                }
+
             }
 
         } catch (err) {
@@ -48,7 +69,7 @@ function Signin() {
 
             alert(
                 err.response?.data?.message ||
-                "Something went wrong"
+                "Invalid Credentials"
             );
 
         }
@@ -56,6 +77,7 @@ function Signin() {
     };
 
     return (
+
         <div className="auth-container">
 
             <div className="auth-card">
@@ -100,19 +122,24 @@ function Signin() {
                 </form>
 
                 <p className="auth-footer">
+
                     Don't have an account?{" "}
+
                     <Link
                         to="/signup"
                         className="auth-link"
                     >
                         Sign Up
                     </Link>
+
                 </p>
 
             </div>
 
         </div>
+
     );
+
 }
 
 export default Signin;
