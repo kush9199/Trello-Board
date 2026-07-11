@@ -12,7 +12,7 @@ function Navbar() {
 
             <div className="navbar-logo">
 
-                🏢 Trello
+                🏢 Kavixa
 
             </div>
 

@@ -83,7 +83,7 @@ function Signin() {
             <div className="auth-card">
 
                 <div className="auth-logo">
-                    Trello
+                    Vorexa
                 </div>
 
                 <h2 className="auth-title">

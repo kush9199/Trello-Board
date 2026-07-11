@@ -1,0 +1,61 @@
+.board-container{
+
+    flex:1;
+
+    padding:30px;
+
+}
+
+.board-container h1{
+
+    color:#172B4D;
+
+    margin-bottom:10px;
+
+}
+
+.board-container p{
+
+    color:#5E6C84;
+
+    margin-bottom:30px;
+
+}
+
+.board-content{
+
+     display:flex;
+
+    gap:25px;
+
+    margin-top:30px;
+
+    overflow-x:auto;
+
+    padding-bottom:20px;
+
+}
+
+.column{
+
+    background:white;
+
+    min-height:500px;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+.column h2{
+
+    text-align:center;
+
+    color:#0052CC;
+
+    margin-bottom:20px;
+
+}

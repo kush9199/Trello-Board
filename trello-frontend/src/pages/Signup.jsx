@@ -53,11 +53,11 @@ function Signup() {
             <div className="auth-card">
 
                 <div className="auth-logo">
-                    Trello
+                    Vorexa
                 </div>
 
                 <h2 className="auth-title">
-                    Create your Trello Account
+                    Create your Vorexa Account
                 </h2>
 
                 <form onSubmit={handleSignup}>
